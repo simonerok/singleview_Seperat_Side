@@ -12,6 +12,7 @@
     </style>
   </head>
   <body>
+    <button>Tilbage</button>
     <article class="person_id">
       <img src="" alt="" class="billede_singleview" />
       <h2></h2>
@@ -25,38 +26,35 @@
       const id = urlParams.get("id");
       console.log(id);
 
-      const url = "https://persongalleri-5d3e.restdb.io/rest/persongalleri " + id;
-      let enPerson;
-      const myHeaders = {
-        "api-key": "600fe9211346a1524ff12e31",
+      const endpoint = "https://persongalleri-5d3e.restdb.io/rest/persongalleri/" + id;
+      const mereinfo = {
+        headers: {
+          "x-apikey": "600fe9211346a1524ff12e31",
+        },
       };
+
+      let enPerson;
 
       console.log("ID", id);
       document.addEventListener("DOMContentLoaded", hentData);
 
       async function hentData() {
-        const mereInfo = await fetch(`https://persongalleri-5d3e.restdb.io/rest/persongalleri/${id}`, {
-          headers: myHeaders,
-        });
-        enPerson = await mereInfo.json();
-
-        console.log("personer", enPerson);
-        VisPerson(enPerson);
+        const respons = await fetch(endpoint, mereinfo);
+        enPerson = await respons.json();
+        console.log(enPerson);
+        visPerson();
       }
 
-      function VisPerson() {
-        enPerson.querySelector("h2").textContent = enPerson.fornavn + " " + enPerson.efternavn;
-        enPerson.querySelector(".person_id").src = "../billeder/" + enPerson.billede;
-        enPerson.querySelector(".person_id").alt = enPerson.billede;
+      function visPerson() {
+        document.querySelector("h2").textContent = enPerson.fornavn + " " + enPerson.efternavn;
+        document.querySelector("img").src = "../billeder/" + enPerson.billede;
+        document.querySelector("img").alt = enPerson.billede;
         document.querySelector("button").addEventListener("click", tilbageKnap);
       }
 
       function tilbageKnap() {
         history.back();
       }
-
-      /* hentData();
-       */
     </script>
   </body>
 </html>
